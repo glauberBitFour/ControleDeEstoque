@@ -8,7 +8,7 @@
         width: 110px;
     }
 
-    #grid_cadastro > thead > tr th:nth-child(3) {
+    #grid_cadastro > thead > tr th:nth-child(4) {
         width: 200px;
     }
 
@@ -46,20 +46,23 @@
                         <tr>
                             <th>Nome</th>
                             <th>Ativo</th>
+                            <th>Data Cadastro</th>
                             <th>Ação</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr data-id="@item.Id">
-                                <td>@item.Nome</td>
-                                <td>@{var ativo = (item.Ativo ? "SIM" : "NÃO");}@ativo</td>
-                                <td>
-                                    <a class="btn btn-primary btn-alterar" role="button"><i class="glyphicon glyphicon-pencil"></i> Alterar</a>
-                                    <a class="btn btn-danger btn-excluir" role="button"><i class="glyphicon glyphicon-trash"></i> Excluir</a>
-                                </td>
-                            </tr>
+                        <tr data-id="@item.Id">
+                            <td>@item.Nome</td>
+                            <td>@{var ativo = (item.Ativo ? "SIM" : "NÃO");}@ativo</td>
+                            <td>@item.DataCadastro</td>
+
+                            <td>
+                                <a class="btn btn-primary btn-alterar" role="button"><i class="glyphicon glyphicon-pencil"></i> Alterar</a>
+                                <a class="btn btn-danger btn-excluir" role="button"><i class="glyphicon glyphicon-trash"></i> Excluir</a>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -70,11 +73,11 @@
 
 @Html.Hidden("id_cadastro")
 <div id="modal_cadastro" class="form-horizontal invisivel" role="dialog">
-    
 <div id="msg_mensagem_aviso" class="text-danger invisivel"></div>
 
 
     <fieldset>
+        @Html.AntiForgeryToken()
         <div class="row">
             <div class="form-group">
                 @Html.Label("txt_nome", "Nome", new { @class = "col-md-2 control-label" })
@@ -98,7 +101,7 @@
                     </div>
 
 
-                    <!--mensagens de erros -->
+                    <!------------------------mensagens de erros ----------------------------------------------->
                     <div id="msg_aviso" class="alert alert-warning invisivel">Falta preencher os campos acima</div>
                     <div id="msg_erro" class="alert alert-danger invisivel"> Ops! Deu ruim =/</div>
                 
@@ -110,6 +113,17 @@
 </div>
 @section Scripts{
     <script>
+
+        //como o as requisiçoes estao sendo feitas por javascript
+        //foi necessario criar essa function 
+        //essaa funçaõ vai incluir essa propriedade __RequestVerificationToken no objeto data
+        //Esse campo   Html.AntiForgeryToken() era um campo hiddem e vai gerar um cookie, e onde pega essa valor $('[name= __RequestVerificationToken]').val(); e entaoo vc tem o valor do token do campo hiddem 
+        //e em todos os posts abbaixo vai chamar passando no parametro
+        function add_anti_forgery_token(data) {
+            data.__RequestVerificationToken = $('[name= __RequestVerificationToken]').val();
+            return data;
+        }
+
             function abrir_form(dados) {
                 $('#id_cadastro').val(dados.Id);
                 $('#txt_nome').val(dados.Nome);
@@ -135,13 +149,15 @@
                 .on('hidden.bs.modal', function () {
                     modal_cadastro.hide().appendTo('body');
                 });
-            }
+        }
+        
 
             function criar_linha_grid(dados) {
                 var ret =
                     '<tr data-id=' + dados.Id + '>' +
                     '<td>' + dados.Nome + '</td>' +
                     '<td>' + (dados.Ativo ? 'SIM' : 'NÃO') + '</td>' +
+                    '<td>' + (dados = new Date().toLocaleString()) + '</td>' +
                     '<td>' +
                     '<a class="btn btn-primary btn-alterar" role="button" style="margin-right: 3px"><i class="glyphicon glyphicon-pencil"></i> Alterar</a>' +
                     '<a class="btn btn-danger btn-excluir" role="button"><i class="glyphicon glyphicon-trash"></i> Excluir</a>' +
@@ -151,8 +167,8 @@
                 return ret;
             }
 
-            $(document).on('click', '#btn_incluir', function () {
-                abrir_form({ Id: 0, Nome: '', Ativo: true });
+        $(document).on('click', '#btn_incluir', function () {
+            abrir_form({ Id: 0, Nome: '', Ativo: true});
             })
             .on('click', '.btn-alterar', function () {
                 var btn = $(this),
@@ -160,7 +176,7 @@
                     url = '@Url.Action("RecuperarGrupoProduto", "Cadastro")',
                     param = { 'id': id };
 
-                $.post(url, param, function (response) {
+                $.post(url, add_anti_forgery_token(param), function (response) {
                     if (response) {
                         abrir_form(response);
                     }
@@ -187,7 +203,7 @@
                     },
                     callback: function (result) {
                         if (result) {
-                            $.post(url, param, function (response) {
+                            $.post(url, add_anti_forgery_token(param), function (response) {
                                 if (response) {
                                     tr.remove();
                                 }
@@ -202,10 +218,11 @@
                     param = {
                         Id: $('#id_cadastro').val(),
                         Nome: $('#txt_nome').val(),
-                        Ativo: $('#cbx_ativo').prop('checked')
+                        Ativo: $('#cbx_ativo').prop('checked'),
+                        
                     };
 
-                $.post(url, param, function (response) {
+                $.post(url, add_anti_forgery_token(param), function (response) {
                     
                     if (response.Resultado == "OK") {
                         if (param.Id == 0) {
@@ -216,6 +233,8 @@
                             table.append(linha);
                         }
                         else {
+
+
                             var linha = $('#grid_cadastro').find('tr[data-id=' + param.Id + ']').find('td');
                             linha
                                 .eq(0).html(param.Nome).end()
