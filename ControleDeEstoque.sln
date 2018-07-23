@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeEstoque.Web", "ControleDeEstoque.Web\ControleDeEstoque.Web.csproj", "{EC917742-8671-42D6-94B9-409BE6CB1EA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testes", "testes\testes.csproj", "{2A678BC5-C265-4D8D-8A76-0F039F07BFDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EC917742-8671-42D6-94B9-409BE6CB1EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC917742-8671-42D6-94B9-409BE6CB1EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC917742-8671-42D6-94B9-409BE6CB1EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A678BC5-C265-4D8D-8A76-0F039F07BFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A678BC5-C265-4D8D-8A76-0F039F07BFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A678BC5-C265-4D8D-8A76-0F039F07BFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A678BC5-C265-4D8D-8A76-0F039F07BFDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
