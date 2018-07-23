@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace ControleDeEstoque.Web
+namespace testes
 {
     public class MvcApplication : System.Web.HttpApplication
     {
@@ -18,10 +18,8 @@ namespace ControleDeEstoque.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-
-        //valida as entradas de dados do tipo script,visando a segurança da aplicação
         void Application_Error(object sender, EventArgs e)
-        { 
+        {
             Exception ex = Server.GetLastError();
 
             if (ex is HttpRequestValidationException)
@@ -31,15 +29,6 @@ namespace ControleDeEstoque.Web
                 Response.ContentType = "application/json";
                 Response.Write("{ \"Resultado\":\"AVISO\",\"Mensagens\":[\"Somente texto sem caracteres especiais pode ser enviado.\"],\"IdSalvo\":\"\"}");
                 Response.End();
-            }
-            //validação de token para as requisiçoes
-            else if (ex is HttpAntiForgeryException)
-            {
-                Response.Clear();
-                Response.StatusCode = 200;
-                Response.End();
-
-                //gravar LOG
             }
         }
     }
