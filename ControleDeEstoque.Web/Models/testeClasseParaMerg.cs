@@ -10,5 +10,7 @@ namespace ControleDeEstoque.Web.Models
         public int teste { get; set; }
         public string MyProperty { get; set; }
         //testando
+
+        public int MyProperty { get; set; }
     }
 }
