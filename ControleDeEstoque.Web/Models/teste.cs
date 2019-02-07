@@ -5,10 +5,7 @@ using System.Web;
 
 namespace ControleDeEstoque.Web.Models
 {
-    public class testeClasseParaMerg
+    public class teste
     {
-        public int teste { get; set; }
-        public string MyProperty { get; set; }
-        //testando
     }
 }
